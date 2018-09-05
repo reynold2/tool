@@ -21,10 +21,11 @@ class Excel(object):
             return cls.instance
     def __init__(self,path,*args,**kwargs):
         if Excel.init_falg is False:
+
+            self._excelpath=path
+            self.list_exceldata = []
+            Excel.init_falg=True
             return
-        self._excelpath=path
-        self.list_exceldata = []
-        Excel.init_falg=True
     @property
     def excelpath(self):
         return self._excelpath
@@ -48,7 +49,7 @@ class Excel(object):
             return self.list_exceldata
         except Exception as res:
             logging.exception("Read ExcelFile opening exception:%s"%(res))
-    def WriteEXcleData(self, path,listdata=[]):
+    def WriteEXcleData(self, path=None,listdata=[]):
         if (listdata and path) is not None:
             try:
                 wb = xlwt.Workbook(encoding='utf-8')
@@ -138,13 +139,13 @@ class config_io(object):
 
 if __name__ == "__main__":
     c = config_io()
-    e = excel_io()
+    e = Excel(path="report.xls")
     print(c.ReadConfigData())
     print(e.ReadEXcleData())
+
+
+    # print(e.ReadEXcleData())
     c.configpath = "config1.ini"
-    e.excelpath = "G:/Python3/layout/tool/RE/report.xls"
-    print(e.ReadEXcleData())
-    e.excelpath = "G:/Python3/layout/tool/report.xls"
     c.WriteConfigData(outconfdata={"f": 2221})
     e.WriteEXcleData(listdata=[1, 3, 12])
     print(c.ReadConfigData())
